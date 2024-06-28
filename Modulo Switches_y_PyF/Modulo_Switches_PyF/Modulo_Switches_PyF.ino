@@ -126,7 +126,7 @@ void loop() {
       completedSwitches=false;
     }
   }
-  // else {} rutina de juego finalizado
+  // else if (completedSwitches == true){} rutina de juego finalizado
   if (completedSwitches == true){ 
     if (gameWon==false){
       char key = teclado.getKey();
