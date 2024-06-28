@@ -1,0 +1,73 @@
+void setup() {
+  Serial.begin(9600); 
+  randomSeed(analogRead(0)); // Inicializa la semilla aleatoria
+  generarNumero();
+
+  pinMode(dataPin, OUTPUT);
+  pinMode(latchPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
+  digitalWrite(latchPin, LOW);
+  digitalWrite(clockPin, LOW);
+}
+
+void loop() {
+  // Iniciar la variable que almacenará los valores binarios
+  byte binario = 0b00000000;
+
+  // Agregar los verdes al binario
+  for(int i = 0; i < fijas; i++) {
+    binario = (binario >> 3) | 0b00100000;
+  }
+
+  // Agregar los rojos al binario
+  for(int i = 0; i < picas; i++) {
+    binario = (binario >> 3) | 0b10000000;
+  }
+
+  // Agregar los restantes al binario
+  for(int i = 0; i < (numDigitos-picas-fijas); i++) {
+    binario = (binario >> 3) | 0b10100000;
+    
+  }
+	
+  // Enviar el binario a los registros de desplazamiento
+  //binario= value | value2;
+  digitalWrite(latchPin, LOW);
+  shiftOut(dataPin, clockPin, MSBFIRST, (binario >> 8) ); // Primer registro
+  digitalWrite(latchPin, HIGH);
+  digitalWrite(latchPin, LOW);
+  shiftOut(dataPin, clockPin, MSBFIRST, binario & 0xFF);        // Segundo registro
+  digitalWrite(latchPin, HIGH);
+  
+  //binario = (binario >> 3) | 0b10000000;
+  
+
+  // Pausa antes de la siguiente actualización
+  delay(1000);
+}
+
+/*void loop() {
+    // Empieza con el pin de latch bajo para evitar cambios mientras envías datos
+  digitalWrite(latchPin, LOW);
+
+  
+  for (int i=0; i< fijas; i++){
+  	
+  }
+  // Envía los datos al shift register
+  shiftOut(dataPin, clockPin, MSBFIRST, value); // Envía 0b11111111 para encender todos los LEDs
+  shiftOut(dataPin, clockPin, MSBFIRST, value2);
+  // Cambia el pin de latch a alto para aplicar los cambios
+  digitalWrite(latchPin, HIGH);
+
+  // Espera un segundo
+  delay(1000);
+  
+  /*for (int i=0; i<8; i++){
+  	digitalWrite(latchPin, LOW);
+    value=value>>1;
+    shiftOut(dataPin, clockPin, MSBFIRST, value);
+    digitalWrite(latchPin, HIGH);
+    delay(1000);
+  }*/
+//}
