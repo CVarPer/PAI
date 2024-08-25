@@ -5,8 +5,9 @@
 #define numSwitches  5
 #define switchesLEDPin  7 //Pin donde se conecta la tira de LEDs
 const int switchesPin[numSwitches] = {2,3,4,5,6}; //Pines a los que se conectan los switches
+const int LEDstartingStates[numSwitches] = {0,0,0,0,0}; //Estados inicial de los LEDs
 bool previousSwitchStates[numSwitches] = {0,0,0,0,0}; //Estados anteriores de los switch
-const int switchesAnswer[numSwitches] = {1,0,0,1,0}; //Respuesta vista desde los LEDs
+const int switchesAnswer[numSwitches] = {1,0,0,1,0}; //Respuesta
 int LEDStates[numSwitches] = {};
 bool completedSwitches = false;
 //Comunicacion con el cerebro
@@ -52,8 +53,6 @@ char numGenerado[numDigitos];
 Adafruit_NeoPixel PyF_LED = Adafruit_NeoPixel(numDigitos, PyF_LEDPin, NEO_GRB + NEO_KHZ800);
 //Fin Variables PyF
 
-bool blackoutDone = false;
-
 
 void setup() {
   Serial.begin(9600);  // Inicializar la comunicación serial
@@ -77,13 +76,16 @@ void setup() {
   switchesLED.show();
   PyF_LED.begin();
   PyF_LED.show();
-
+  for (int i = 0; i < numSwitches; i++) {
+    LEDStates[i] = LEDstartingStates[i];
+    setLEDState(i, LEDstartingStates[i]);
+  }
 }
 
 void loop(){
   if (digitalRead(cerebroApproval) == HIGH){
     if (!completedSwitches){
-      bool switchesStates[numSwitches]; //estado actual de los switches
+      bool switchesStates[numSwitches];
       for (int i = 0; i < numSwitches; i++){ //Leer el estado de todos los switches
         switchesStates[i] = digitalRead(switchesPin[i]);
       }
@@ -94,8 +96,7 @@ void loop(){
     }
     else{ //Switches completado, inicio de Picas y Fijas
       switchesLED.setPixelColor(numSwitches, switchesLED.Color(0, 255, 0)); //verde
-      switchesLED.show();
-      if (gameWon == false){
+      if (gameWon==false){
        char key = teclado.getKey();
        if (key){
           //Serial.print("Key "); //debug
@@ -105,65 +106,34 @@ void loop(){
         }
       }
       else { // rutina finalizacion del juego
-        //lcd.clear();
+        lcd.clear();
         lcd.print("GAME COMPLETED");
         digitalWrite(gameSolved, HIGH);
-        lightPattern();
-        
+        delay(500);
       }
     }
-   
+    //Ambos modulos finalizados
   }
-  if (gameWon){
-    pinMode(roadStart, INPUT);
-    if (digitalRead(roadStart) == HIGH){
-      blackOut();
-    }
-  }
+
 }
 
-void updateLEDStates(bool currentSwitchStates[]){
+void updateLEDStates(bool switchStates[]){
   for (int i = 0; i < numSwitches; i++){
-    // Revisa un cambio de estado en un switch
-    if (currentSwitchStates[i] != previousSwitchStates[i]){
-      // Si son diferentes
-      toggleLEDsAffectedBySwitch(i); //llama la funcion cada que ve uno diferente
-      previousSwitchStates[i] = currentSwitchStates[i];
+    //usando XOR se cambia de estado los LEDs
+    if (i == 3){
+      // LED 3 afectado por varios switches
+      LEDStates[3] = switchStates[1] ^ switchStates[2] ^ switchStates[3] ^ LEDstartingStates[3];
+    } 
+    else if (i == 4){
+      // LED 4 afectado por varios switches
+      LEDStates[4] = switchStates[3] ^ switchStates[4] ^ LEDstartingStates[4];
+    } 
+    else {
+      //Afectacion directa a resto de LEDs
+      LEDStates[i] = switchStates[i] ^ LEDstartingStates[i];
     }
-  }
 
-  switchesLED.show();  // Update the LED strip with new colors
-}
-
-void toggleLEDsAffectedBySwitch(int switchIndex) { 
-  // La forma en que afecta cada switch sobre los LED
-  switch (switchIndex){
-    case 0:{ //Switch 1 afecta todos los LEDs
-      for (int i = 0; i < numSwitches; i++){
-        LEDStates[i] = !LEDStates[i];
-      }
-    }
-    case 1:{ //Switch 2 afecta LED 2
-      LEDStates[2] = !LEDStates[2];
-    }
-    case 2:{ //Switch 3 afecta LED 1, 3, 5
-      LEDStates[1] = !LEDStates[1];
-      LEDStates[3] = !LEDStates[3];
-      LEDStates[5] = !LEDStates[5];
-    }
-    case 3:{ //Switch 4 afecta LED 2, 5
-      LEDStates[2] = !LEDStates[2];
-      LEDStates[5] = !LEDStates[5];
-    }
-    case 4:{ //Switch 5 afecta LED 3, 4
-      LEDStates[3] = !LEDStates[3];
-      LEDStates[4] = !LEDStates[4];
-    }
-  }
-
-  // Actualiza los LEDs con los nuevos estados
-  for (int i = 0; i < numSwitches; i++) {
-    setLEDState(i, LEDStates[i]);
+    setLEDState(i, LEDStates[i]);  // Set the LED color based on updated states
   }
 }
 
@@ -346,20 +316,4 @@ void set_pyf_LEDColors(int fijas, int picas){
     PyF_LED.setPixelColor(i, PyF_LED.Color(255, 0, 0));  // Rojo
   }
   PyF_LED.show();
-}
-
-void blackOut(){
-    //if (!blackoutDone){
-      setStripColor(0, 0, 0, 0);
-      setStripColor(1, 0, 0, 0); // apagar tira
-      lcd.clear();
-      lcd.noBacklight(); // apagar la lcd
-      //blackoutDone = true;
-      delay(5000);
-  //}  
-}
-
-void lightPattern(){
-    
-  
 }
