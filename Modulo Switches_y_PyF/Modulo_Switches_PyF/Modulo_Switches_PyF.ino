@@ -52,7 +52,13 @@ char numGenerado[numDigitos];
 Adafruit_NeoPixel PyF_LED = Adafruit_NeoPixel(numDigitos, PyF_LEDPin, NEO_GRB + NEO_KHZ800);
 //Fin Variables PyF
 
-bool blackoutDone = false;
+bool blackOutDone = false;
+unsigned long previousMillisSwitches = 0;  //  tiempo switchesLED
+unsigned long previousMillisPyF = 0;       // tiempo PyF_LED
+int waitSwitches = 500;                    // Intervalo de tiempo entre parpadeo milliseconds
+int waitPyF = 20;                          // Intervalo de tiempo entre cambio de color milliseconds
+long firstPixelHueSwitches = 0; //Transicion de colores HSV
+long firstPixelHuePyF = 0;
 
 
 void setup() {
@@ -108,16 +114,19 @@ void loop(){
         //lcd.clear();
         lcd.print("GAME COMPLETED");
         digitalWrite(gameSolved, HIGH);
-        lightPattern();
+        updateWavePattern();   //Patron de luz para PyF
+        updateBlinkingPattern(); //Patron de Luz para Switches
         
       }
     }
    
   }
-  if (gameWon){
-    pinMode(roadStart, INPUT);
-    if (digitalRead(roadStart) == HIGH){
-      blackOut();
+  else{
+    if (gameWon){
+      pinMode(roadStart, INPUT);
+      if (digitalRead(roadStart) == HIGH){
+        blackOut();
+      }
     }
   }
 }
@@ -349,17 +358,67 @@ void set_pyf_LEDColors(int fijas, int picas){
 }
 
 void blackOut(){
-    //if (!blackoutDone){
-      setStripColor(0, 0, 0, 0);
-      setStripColor(1, 0, 0, 0); // apagar tira
+    if (!blackOutDone){
+      for (int i = 0; i < numSwitches; i++){ //Apagar LEDs Switches
+        switchesLED.setPixelColor(i, 0);
+      }
+      for (int i = 0; i < numDigitos; i++){ //Apagar LEDs PyF
+        PyF_LED.setPixelColor(i, 0);
+      }
+      
       lcd.clear();
       lcd.noBacklight(); // apagar la lcd
-      //blackoutDone = true;
+      blackOutDone = true;
       delay(5000);
-  //}  
+  }  
 }
 
-void lightPattern(){
-    
-  
+void updateWavePattern(){
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - previousMillisPyF >= waitPyF){
+    previousMillisPyF = currentMillis;  
+
+    // Efecto de ola
+    for (int i = 0; i < numDigitos; i++){
+      int pixelHue = firstPixelHuePyF + (i * 65536L / numDigitos);  // Calcular HUE para cada LED
+      PyF_LED.setPixelColor(i, PyF_LED.ColorHSV(pixelHue));  // Asignar color con el HUE
+    }
+
+    PyF_LED.show();
+    firstPixelHuePyF += 256;  // Aumento del HUE para el siguiente ciclo
+    if (firstPixelHuePyF >= 65536){
+      firstPixelHuePyF = 0;  // Reset hue
+    }
+  }
+}
+
+
+void updateBlinkingPattern(){
+  unsigned long currentMillis = millis(); 
+  static bool isOn = false;  // Saber si los LEDs estan encendidos o apagados
+
+  if (currentMillis - previousMillisSwitches >= waitSwitches){
+    previousMillisSwitches = currentMillis;
+    if (isOn){
+      // Apagar todos los LEDs
+      for (int i = 0; i < numSwitches; i++){
+        switchesLED.setPixelColor(i, 0);
+      }
+      isOn = false;
+    } 
+    else {
+      uint32_t color = switchesLED.ColorHSV(firstPixelHueSwitches); //Calcula el color para el parpadeo
+
+      for (int i = 0; i < numSwitches; i++){
+        switchesLED.setPixelColor(i, color);
+      }
+      firstPixelHueSwitches += 256;  
+      if (firstPixelHueSwitches >= 65536){
+        firstPixelHueSwitches = 0; 
+      }
+      isOn = true;
+    }
+    switchesLED.show();  
+  }
 }
