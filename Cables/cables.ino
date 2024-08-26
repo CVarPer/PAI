@@ -1,84 +1,90 @@
-const int cable1 = 2; 
-const int cable2 = 3;  
-const int cable3 = 4;  
-const int cable4 = 5;  
-const int cable5 = 6;  
-const int cable6 = 7;  
-const int cable7 = 8;
-const int error = 9;
-const int salida = 10;
-bool est1 = 0;
-bool est2 = 0;
-bool est3 = 0;
-bool est4 = 0;
-bool est5 = 0;
-bool est6 = 0;
-bool est7 = 0;
-void setup() {
-  // Configurar cada pin como entrada
-  pinMode(cable1, INPUT);
-  pinMode(cable2, INPUT);
-  pinMode(cable3, INPUT);
-  pinMode(cable4, INPUT);
-  pinMode(cable5, INPUT);
-  pinMode(cable6, INPUT);
-  pinMode(cable7, INPUT);  
-  pinMode(error, OUTPUT);
-  pinMode(salida, OUTPUT);
+
+#define numCables 7
+const int cablePins[numCables] = {2, 3, 4, 5, 6, 7, 8};
+const int solenoidPin = 9;
+bool disconnectedCables[numCables] = {}; //Variable para almacenar los cables que ya fueron desconectados para no volver a penalizar
+#define gameSolved 8
+#define badAnswerPin 9
+#define cerebroApproval 10
+#define roadStart 11
+
+const int correctCable = 2; //Pin al que se conecta el cable correcto que se debe cortar
+unsigned long timeForMistakeSignal = 3000; //Tiempo durante el que se envia la señal de error
+unsigned long errorStartTime = 0;
+bool errorCommited = false;
+bool gameWon = false;
+
+unsigned long timeToDeactivation = 15; //Tiempo en minutos desde que se activo el solenoide
+unsigned long timeFromSolenoidActivation = 0;
+
+void setup(){
+  for (int i = 0; i < numCables; i++){
+    pinMode(cablePins[i], INPUT);
+  }
+  pinMode(badAnswerPin, OUTPUT);
+  pinMode(cerebroApproval, INPUT);
+  pinMode(gameSolved, OUTPUT);
+  pinMode(roadStart, OUTPUT);
+  digitalWrite(roadStart, HIGH); //es inicio de camino
+  
 }
 
-void loop() {
-  bool e1 = digitalRead(cable1);
-  bool e2 = digitalRead(cable2);
-  bool e3 = digitalRead(cable3);
-  bool e4 = digitalRead(cable4);
-  bool e5 = digitalRead(cable5);
-  bool e6 = digitalRead(cable6);
-  bool e7 = digitalRead(cable7);
-  if ((est1 == LOW)&&(e1!= HIGH)){
-  digitalWrite(error, HIGH);
-  est1=1;
-  delay(3000);
-  digitalWrite(error, LOW);  
+void loop(){
+  if (digitalRead(cerebroApproval) == HIGH){
+    if (!gameWon){
+      checkCables();
+      sendError();
+    }
+    else {
+      //fin del juego
+      unsigned long currentTime = millis();
+      if (currentTime - timeFromSolenoidActivation >= (timeToDeactivation*60000)){ //min a ms
+        //Si ya paso el tiempo para desactivar el solenoide, desenergizarlo para no consumir corriente
+        digitalWrite(solenoidPin, LOW);
+      }
+    }
   }
-  if ((est2 == LOW)&&(e2!= HIGH)){
-  digitalWrite(error, HIGH);
-  est2=1;
-  delay(3000);
-  digitalWrite(error, LOW);  
+  else {
+    //blackout
   }
-  if ((est4 == LOW)&&(e4!= HIGH)){
-  digitalWrite(error, HIGH);
-  est4=1;
-  delay(3000);
-  digitalWrite(error, LOW);  
+}
+
+void checkCables(){
+  // Los cables tienen una resistencia de Pulldown
+  // Cuando estan conectados se lee HIGH
+  // Si se lee LOW es porque se desconecto el cable
+  for (int i = 0; i < numCables; i++){
+    if (digitalRead(cablePins[i]) == LOW){
+      //Se desconecto el cable
+      if (i != correctCable){
+        if(!disconnectedCables[i]){ //si no ha sido desconectado ya
+          errorCommited = true;
+          disconnectedCables[i] = true;
+          errorStartTime = millis();
+        }
+      }
+      else {
+        //Se corto el cable correcto
+        gameWon = true;
+        digitalWrite(gameSolved, HIGH);
+        activateSolenoid();
+      }
+    }
   }
-  if ((est5 == LOW)&&(e5!= HIGH)){
-  digitalWrite(error, HIGH);
-  est5=1;
-  delay(3000);
-  digitalWrite(error, LOW);  
+}
+
+void sendError(){
+  unsigned long currentTime = millis();
+  if (errorCommited){
+    if (currentTime - errorStartTime <= timeForMistakeSignal){
+      digitalWrite(badAnswerPin, HIGH);
+    }
+    else{
+      digitalWrite(badAnswerPin, LOW);
+    }
   }
-  if ((est6 == LOW)&&(e6!= HIGH)){
-  digitalWrite(error, HIGH);
-  est6=1;
-  delay(3000);
-  digitalWrite(error, LOW);  
-  }
-  if ((est7 == LOW)&&(e7!= HIGH)){
-  digitalWrite(error, HIGH);
-  est7=1;
-  delay(3000);
-  digitalWrite(error, LOW);  
-  }
-  if ((est3 == LOW)&&(e3!= HIGH)){
-  digitalWrite(salida, HIGH); 
-  est1=1;
-  est2=1;
-  est3=1;
-  est4=1;
-  est5=1;
-  est6=1;
-  est7=1;
-  }
+}
+void activateSolenoid(){
+  digitalWrite(solenoidPin, HIGH);
+  timeFromSolenoidActivation = millis();
 }
