@@ -74,11 +74,13 @@ void setup() {
   lcd.home();
   randomSeed(analogRead(0));
   generarNumero();
-  pinMode(badAnswerPin, OUTPUT);
+    pinMode(badAnswerPin, OUTPUT);
   pinMode(cerebroApproval, INPUT);
   pinMode(gameSolved, OUTPUT);
   pinMode(roadStart, OUTPUT);
   digitalWrite(roadStart, HIGH); //es inicio de camino
+  digitalWrite(badAnswerPin, LOW); //inicializar
+  digitalWrite(gameSolved, LOW);
   switchesLED.begin();
   switchesLED.show();
   PyF_LED.begin();

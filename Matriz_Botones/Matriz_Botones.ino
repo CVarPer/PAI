@@ -68,6 +68,8 @@ void setup(){
   pinMode(gameSolved, OUTPUT);
   pinMode(roadStart, OUTPUT);
   digitalWrite(roadStart, HIGH); //es inicio de camino
+  digitalWrite(badAnswerPin, LOW); //inicializar
+  digitalWrite(gameSolved, LOW);
 }
 
 void loop(){
@@ -92,10 +94,10 @@ void loop(){
         gameWonTime = currentTime;  // Momento en el que el juego se completa
       }
       
-      /*if (currentTime - gameWonTime < timeSinceGameWon){
-        updateLEDMatrix();  // Se mantiene encendido los LEDs en la respuesta correcta durante el tiempo
-      }*/
-      else if(currentTime - gameWonTime < 2*timeSinceGameWon){
+      if (currentTime - gameWonTime <= timeSinceGameWon){
+        //updateLEDMatrix();  // Se mantiene encendido los LEDs en la respuesta correcta durante el tiempo
+      }
+      else if(currentTime - gameWonTime <= 2*timeSinceGameWon){
         //Despues se apagan los LEDs por el mismo tiempo que duraron encendidos
         for (int i = 0; i < ROWS; i++){
           for (int j = 0; j < COLS; j++){
