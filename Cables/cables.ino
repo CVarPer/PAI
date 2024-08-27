@@ -26,7 +26,8 @@ void setup(){
   pinMode(gameSolved, OUTPUT);
   pinMode(roadStart, OUTPUT);
   digitalWrite(roadStart, HIGH); //es inicio de camino
-  
+  digitalWrite(badAnswerPin, LOW); //inicializar
+  digitalWrite(gameSolved, LOW);
 }
 
 void loop(){
@@ -81,6 +82,7 @@ void sendError(){
     }
     else{
       digitalWrite(badAnswerPin, LOW);
+      errorCommited = false;
     }
   }
 }
