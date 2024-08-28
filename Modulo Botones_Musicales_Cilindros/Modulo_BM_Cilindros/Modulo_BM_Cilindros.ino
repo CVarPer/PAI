@@ -438,7 +438,7 @@ void chasingLightPattern(){
       LEDsRow.Color(255, 255, 255) // Blanco
     };
     
-    int numColors = sizeof(colors) / sizeof(colors[0]);  // Number de colores en el arreglo
+    int numColors = sizeof(colors) / sizeof(colors[0]);  // Numero de colores en el arreglo
   
     // Chasing pattern: Se actualiza cada 150 milisegundos
     if (currentTime - lastUpdateTime >= 150){
@@ -515,6 +515,7 @@ void blackOut(){
       
       lcd.clear();
       lcd.noBacklight(); // apagar la lcd
+      LEDsRow.show();
       cornerLED.setPixelColor(0,cornerLED.Color(0,0,0)); //apagado
       cornerLED.show();
       blackOutDone = true;
