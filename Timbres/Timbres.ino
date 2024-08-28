@@ -20,7 +20,7 @@ unsigned long lastButtonPressTime = 0;
 unsigned long lastClickTime = 0;
 
 #define cornerLEDPin 6
-Adafruit_NeoPixel cornerLED = Adafruit_NeoPixel(1, cornerLEDPin, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel cornerLED = Adafruit_NeoPixel(1, cornerLEDPin, NEO_RGB + NEO_KHZ800);
 
 //Joystick
 #define numRingLEDs 7
@@ -28,7 +28,7 @@ Adafruit_NeoPixel cornerLED = Adafruit_NeoPixel(1, cornerLEDPin, NEO_GRB + NEO_K
 #define JS_X A0 // Posicion X del Joystick
 #define JS_Y A1 // Posicion Y del Joystick
 #define JS_button 12 // Pulsador del Joystick
-Adafruit_NeoPixel ringLED = Adafruit_NeoPixel(numRingLEDs, ringLEDPin, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel ringLED = Adafruit_NeoPixel(numRingLEDs, ringLEDPin, NEO_RGB + NEO_KHZ800);
 
 uint32_t colors[] = {
   ringLED.Color(255, 0, 0),   // Red

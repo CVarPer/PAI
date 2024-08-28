@@ -13,7 +13,7 @@
 
 #define NUMPIXELS 20 // numero de LEDs en la tira
 
-Adafruit_NeoPixel penitence = Adafruit_NeoPixel(1, penitenceLedPin, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel penitence = Adafruit_NeoPixel(1, penitenceLedPin, NEO_RGB + NEO_KHZ800);
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUMPIXELS, stripLedPin, NEO_GRB + NEO_KHZ800);
 
 const int numModules = 3;

@@ -27,11 +27,11 @@ unsigned long errorStartTime = 0;
 bool errorCommited = false;
 
 #define cornerLEDPin 12
-Adafruit_NeoPixel cornerLED = Adafruit_NeoPixel(1, cornerLEDPin, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel cornerLED = Adafruit_NeoPixel(1, cornerLEDPin, NEO_RGB + NEO_KHZ800);
 
 #define LEDsRowPin 7
 #define numLEDsInRow 7
-Adafruit_NeoPixel LEDsRow = Adafruit_NeoPixel(numLEDsInRow, LEDsRowPin, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel LEDsRow = Adafruit_NeoPixel(numLEDsInRow, LEDsRowPin, NEO_RGB + NEO_KHZ800);
 
 //Definicion Variables BM
 

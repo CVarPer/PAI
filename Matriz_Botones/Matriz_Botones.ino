@@ -4,7 +4,7 @@
 // Define the number of rows and columns for the keypad
 const byte ROWS = 3;
 const byte COLS = 3;
-#define cornerLEDPin 2
+#define cornerLEDPin 13
 
 bool initialCondition[ROWS][COLS] = {{1,1,1} , {0,0,0}, {0,0,0}}; //Estado en el que inician los LEDs
 bool LEDStates[ROWS][COLS] = {}; //Estado actual de los LEDs
@@ -23,7 +23,7 @@ byte ledRowPins[ROWS] = {2, 3, 4};  // Pines conectados a las FILAS de la matriz
 byte ledColPins[COLS] = {5, 6, 7};  //Pines conectados a las COLUMNAS de la matriz de LEDs, columnas GND
 
 Keypad buttonMatrix = Keypad(makeKeymap(keyPad), rowPins, colPins, ROWS, COLS);
-Adafruit_NeoPixel cornerLED = Adafruit_NeoPixel(1, cornerLEDPin, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel cornerLED = Adafruit_NeoPixel(1, cornerLEDPin, NEO_RGB + NEO_KHZ800);
 //Variables para la comunicacion con el cerebro
 #define gameSolved 8
 #define badAnswerPin 9

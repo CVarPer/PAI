@@ -15,7 +15,7 @@ bool completedSwitches = false;
 #define cerebroApproval 10
 #define roadStart 11
 
-Adafruit_NeoPixel switchesLED = Adafruit_NeoPixel(numSwitches, switchesLEDPin, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel switchesLED = Adafruit_NeoPixel(numSwitches, switchesLEDPin, NEO_RGB + NEO_KHZ800);
 // Fin Variables Switches
 //Declaracion Variables PyF
 
@@ -49,7 +49,7 @@ int numIntento=0;
 char numGenerado[numDigitos];
 #define PyF_LEDPin 20
 
-Adafruit_NeoPixel PyF_LED = Adafruit_NeoPixel(numDigitos, PyF_LEDPin, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel PyF_LED = Adafruit_NeoPixel(numDigitos, PyF_LEDPin, NEO_RGB + NEO_KHZ800);
 //Fin Variables PyF
 
 bool blackOutDone = false;
