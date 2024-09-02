@@ -6,9 +6,9 @@ const int pinButtons [numButtons] = {2,3,4,5};
 
 int seqLen = 0; // Cada boton se presiona 1 vez
 //orden en que se deben presionar los botones numerados del 1 al 4
-const int numSeq = 7;
-int Sequence[numSeq] = {1,2,1,3,4,2,4};
-int timesPerButton[numSeq] = {2,4,1,1,2,2,3}; //numero de veces que se presiona cada boton relacionado a Sequence[numSeq]
+const int numSeq = 4;
+int Sequence[numSeq] = {1,2,3,4};
+int timesPerButton[numSeq] = {1,2,3,4}; //numero de veces que se presiona cada boton relacionado a Sequence[numSeq]
 int* correctSequence = nullptr;
 int* inputSequence = nullptr;
 // tiempo maximo permitido para presionar el numero de veces de la secuencia
