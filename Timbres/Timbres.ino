@@ -2,7 +2,7 @@
 #include <math.h>
 
 const int numButtons = 4;
-const int pinButtons [numButtons] = {2,3,4,5};
+const int pinButtons [numButtons] = {9,10,11,12};
 
 int seqLen = 0; // Cada boton se presiona 1 vez
 //orden en que se deben presionar los botones numerados del 1 al 4
@@ -19,15 +19,15 @@ int timesPressed = 0;
 unsigned long lastButtonPressTime = 0;
 unsigned long lastClickTime = 0;
 
-#define cornerLEDPin 6
+#define cornerLEDPin 2
 Adafruit_NeoPixel cornerLED = Adafruit_NeoPixel(1, cornerLEDPin, NEO_RGB + NEO_KHZ800);
 
 //Joystick
 #define numRingLEDs 7
-#define ringLEDPin 7
-#define JS_X A0 // Posicion X del Joystick
-#define JS_Y A1 // Posicion Y del Joystick
-#define JS_button 12 // Pulsador del Joystick
+#define ringLEDPin 3
+#define JS_X A5 // Posicion X del Joystick
+#define JS_Y A4 // Posicion Y del Joystick
+#define JS_button A3 // Pulsador del Joystick
 Adafruit_NeoPixel ringLED = Adafruit_NeoPixel(numRingLEDs, ringLEDPin, NEO_RGB + NEO_KHZ800);
 
 uint32_t colors[] = {
@@ -47,10 +47,10 @@ int lastButtonState = LOW; // Estado Inicial del boton
 
 
 //Comunicacion con el cerebro
-#define gameSolved 8
-#define badAnswerPin 9
-#define cerebroApproval 10
-#define roadStart 11
+#define gameSolved 4
+#define badAnswerPin 5
+#define cerebroApproval 6
+#define roadStart 7
 bool gameWon = false;
 
 unsigned long timeForMistakeSignal = 3000; //Tiempo durante el que se envia la señal de error
