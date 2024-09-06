@@ -3,17 +3,17 @@
 #include <LiquidCrystal_I2C.h>
 //Declaracion Variables Switches
 #define numSwitches  5
-#define switchesLEDPin  7 //Pin donde se conecta la tira de LEDs
-const int switchesPin[numSwitches] = {2,3,4,5,6}; //Pines a los que se conectan los switches
+#define switchesLEDPin  32 //Pin donde se conecta la tira de LEDs
+const int switchesPin[numSwitches] = {34,35,25,33,32}; //Pines a los que se conectan los switches
 bool previousSwitchStates[numSwitches] = {0,0,0,0,0}; //Estados anteriores de los switch
 const int switchesAnswer[numSwitches] = {1,0,0,1,0}; //Respuesta vista desde los LEDs
 int LEDStates[numSwitches] = {};
 bool completedSwitches = false;
 //Comunicacion con el cerebro
-#define gameSolved 8
-#define badAnswerPin 9
-#define cerebroApproval 10
-#define roadStart 11
+#define gameSolved 12
+#define badAnswerPin 13
+#define roadStart 14
+#define cerebroApproval 15
 
 Adafruit_NeoPixel switchesLED = Adafruit_NeoPixel(numSwitches, switchesLEDPin, NEO_RGB + NEO_KHZ800);
 // Fin Variables Switches
@@ -31,10 +31,10 @@ char keys[KPROWS][KPCOLS] = {
 };
 
 // Conexion de los pines derecha a izquierda pin 2,3,4,5,6,7,8,9
-//byte rowPins[KPROWS] = {5,4,3,2}; //connect to the row pinouts of the keypad
-//byte colPins[KPCOLS] = {9,8,7,6}; //connect to the column pinouts of the keypad
-byte rowPins[KPROWS] = {15,14,13,12}; //connect to the row pinouts of the keypad
-byte colPins[KPCOLS] = {19,18,17,16}; //connect to the column pinouts of the keypad
+//byte rowPins[KPROWS] = {6,7,8,9}; //connect to the row pinouts of the keypad
+//byte colPins[KPCOLS] = {2,3,4,5}; //connect to the column pinouts of the keypad
+byte rowPins[KPROWS] = {2,0,4,16}; //connect to the row pinouts of the keypad
+byte colPins[KPCOLS] = {17,5,18,19}; //connect to the column pinouts of the keypad
 Keypad teclado = Keypad( makeKeymap(keys), rowPins, colPins, KPROWS, KPCOLS );
 
 int cursorCol=2; //0 a 15
@@ -47,7 +47,7 @@ bool numRepetido = false;
 bool gameWon = false;
 int numIntento=0;
 char numGenerado[numDigitos];
-#define PyF_LEDPin 20
+#define PyF_LEDPin 33
 
 Adafruit_NeoPixel PyF_LED = Adafruit_NeoPixel(numDigitos, PyF_LEDPin, NEO_RGB + NEO_KHZ800);
 //Fin Variables PyF
