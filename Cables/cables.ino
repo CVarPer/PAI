@@ -1,15 +1,15 @@
 
 #define numCables 7
 const int cablePins[numCables] = {2, 3, 4, 5, 6, 7, 8};
-const int solenoidPin = 9;
-bool disconnectedCables[numCables] = {}; //Variable para almacenar los cables que ya fueron desconectados para no volver a penalizar
-#define gameSolved 8
-#define badAnswerPin 9
-#define cerebroApproval 10
-#define roadStart 11
+const int solenoidPin = 13;
+bool disconnectedCables[numCables] = {false}; //Variable para almacenar los cables que ya fueron desconectados para no volver a penalizar
+#define gameSolved 9
+#define badAnswerPin 10
+#define cerebroApproval 11
+#define roadStart 12
 
-const int correctCable = 2; //Pin al que se conecta el cable correcto que se debe cortar
-unsigned long timeForMistakeSignal = 3000; //Tiempo durante el que se envia la señal de error
+const int correctCable = 3; //Pin al que se conecta el cable correcto que se debe cortar
+unsigned long timeForMistakeSignal = 4000; //Tiempo durante el que se envia la señal de error
 unsigned long errorStartTime = 0;
 bool errorCommited = false;
 bool gameWon = false;
@@ -21,6 +21,7 @@ void setup(){
   for (int i = 0; i < numCables; i++){
     pinMode(cablePins[i], INPUT);
   }
+  pinMode(solenoidPin, OUTPUT);
   pinMode(badAnswerPin, OUTPUT);
   pinMode(cerebroApproval, INPUT);
   pinMode(gameSolved, OUTPUT);
@@ -28,6 +29,7 @@ void setup(){
   digitalWrite(roadStart, HIGH); //es inicio de camino
   digitalWrite(badAnswerPin, LOW); //inicializar
   digitalWrite(gameSolved, LOW);
+  digitalWrite(solenoidPin, LOW);
 }
 
 void loop(){
@@ -57,7 +59,7 @@ void checkCables(){
   for (int i = 0; i < numCables; i++){
     if (digitalRead(cablePins[i]) == LOW){
       //Se desconecto el cable
-      if (i != correctCable){
+      if (cablePins[i] != correctCable){
         if(!disconnectedCables[i]){ //si no ha sido desconectado ya
           errorCommited = true;
           disconnectedCables[i] = true;

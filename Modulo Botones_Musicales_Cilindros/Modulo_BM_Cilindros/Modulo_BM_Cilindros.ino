@@ -4,7 +4,7 @@
 //Definicion Variables Cilindros
 
 const int numButtons = 5;
-const int pinCilinderButtons [numButtons] = {2,3,4,5,6}; // Primer boton
+const int pinCilinderButtons [numButtons] = {9,10,11,12,13}; // Primer boton
 const int seqLen = 5; // Si es igual al numero de botones, cada boton se presiona 1 vez
 int inputSequence[seqLen];
 
@@ -15,10 +15,10 @@ const int timeOutTime = 5000;
 int currentPos = 0;
 unsigned long lastButtonPressTime=0;
 
-#define gameSolved 8 //pin para enviar cuando se solucione correctamente
-#define badAnswerPin 9 //pin para enviar señal de solucion incorrecta
-#define cerebroApproval 10 //pin para activar el modulo
-#define roadStart 11
+#define gameSolved 5 //pin para enviar cuando se solucione correctamente
+#define badAnswerPin 6  //pin para enviar señal de solucion incorrecta
+#define cerebroApproval 7 //pin para activar el modulo
+#define roadStart 8
 bool gameWon=false; // modulo completado
 bool completedCilinders = false; //Fin de Cilindros
 
@@ -26,10 +26,10 @@ unsigned long timeForMistakeSignal = 3000; //Tiempo durante el que se envia la s
 unsigned long errorStartTime = 0;
 bool errorCommited = false;
 
-#define cornerLEDPin 12
+#define cornerLEDPin 2
 Adafruit_NeoPixel cornerLED = Adafruit_NeoPixel(1, cornerLEDPin, NEO_RGB + NEO_KHZ800);
 
-#define LEDsRowPin 7
+#define LEDsRowPin 3
 #define numLEDsInRow 7
 Adafruit_NeoPixel LEDsRow = Adafruit_NeoPixel(numLEDsInRow, LEDsRowPin, NEO_RGB + NEO_KHZ800);
 
@@ -37,8 +37,8 @@ Adafruit_NeoPixel LEDsRow = Adafruit_NeoPixel(numLEDsInRow, LEDsRowPin, NEO_RGB 
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 const int numMusicalButtons = 4;
-int musicalButtons[numMusicalButtons] = {2, 3, 4, 5};
-int leds[numMusicalButtons] = {8, 9, 10, 11};
+int musicalButtons[numMusicalButtons] = {4, 15, 16, 17};
+
 
 boolean button[numMusicalButtons] = {0, 0, 0, 0};
 byte o_acentuada[8] = {
@@ -52,7 +52,7 @@ byte o_acentuada[8] = {
   B01110
 };
 
-#define buzzerPin 6
+#define buzzerPin 14
 #define levelsInGame 5
 
 int bt_simonSaid[100];
@@ -74,7 +74,7 @@ bool buttonLEDState = false;  //Estado de los LEDs de botones musicales
 int rainbowIndex = 0;
 
 void setup(){
-    Serial.begin(9600);
+    //Serial.begin(9600);
     
     for (int i = 0; i < numMusicalButtons; i++){
       pinMode(musicalButtons[i], INPUT); //necesario resistencia pulldown

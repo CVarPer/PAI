@@ -4,7 +4,7 @@
 // Define the number of rows and columns for the keypad
 const byte ROWS = 3;
 const byte COLS = 3;
-#define cornerLEDPin 13
+#define cornerLEDPin 9
 
 bool initialCondition[ROWS][COLS] = {{1,1,1} , {0,0,0}, {0,0,0}}; //Estado en el que inician los LEDs
 bool LEDStates[ROWS][COLS] = {}; //Estado actual de los LEDs
@@ -16,8 +16,8 @@ char keyPad [ROWS][COLS] = {
   {'7', '8', '9'}
 };
 
-byte rowPins[ROWS] = {A0, A1, A2};  // Pines conectados a las filas de los botones
-byte colPins[COLS] = {A3, A4, A5};  // Pines conectados a las columnas de los botones
+byte rowPins[ROWS] = {13, A2, A4};  // Pines conectados a las filas de los botones
+byte colPins[COLS] = {A1, A3, A5};  // Pines conectados a las columnas de los botones
 
 byte ledRowPins[ROWS] = {2, 3, 4};  // Pines conectados a las FILAS de la matriz de LEDs, filas VCC
 byte ledColPins[COLS] = {5, 6, 7};  //Pines conectados a las COLUMNAS de la matriz de LEDs, columnas GND
@@ -25,10 +25,10 @@ byte ledColPins[COLS] = {5, 6, 7};  //Pines conectados a las COLUMNAS de la matr
 Keypad buttonMatrix = Keypad(makeKeymap(keyPad), rowPins, colPins, ROWS, COLS);
 Adafruit_NeoPixel cornerLED = Adafruit_NeoPixel(1, cornerLEDPin, NEO_RGB + NEO_KHZ800);
 //Variables para la comunicacion con el cerebro
-#define gameSolved 8
-#define badAnswerPin 9
-#define cerebroApproval 10
-#define roadStart 11
+#define gameSolved 5
+#define badAnswerPin 6
+#define cerebroApproval 7
+#define roadStart 8
 bool gameWon = false;
 
 //Simbolos fin del juego
@@ -45,7 +45,7 @@ bool blackOutDone = false;
 
 void setup(){
   // Initialize serial communication
-  Serial.begin(9600);
+  //Serial.begin(9600);
   cornerLED.begin();
   cornerLED.show();
 
