@@ -8,7 +8,7 @@ int seqLen = 0; // Cada boton se presiona 1 vez
 //orden en que se deben presionar los botones numerados del 1 al 4}
 const int numSeq = 4;
 int Sequence[numSeq] = {1,2,3,4};
-int timesPerButton[numSeq] = {1677,2,3,4}; //numero de veces que se presiona cada boton relacionado a Sequence[numSeq]
+int timesPerButton[numSeq] = {1,2,3,4}; //numero de veces que se presiona cada boton relacionado a Sequence[numSeq]
 int* correctSequence = nullptr;
 int* inputSequence = nullptr;
 // tiempo maximo permitido para presionar el numero de veces de la secuencia

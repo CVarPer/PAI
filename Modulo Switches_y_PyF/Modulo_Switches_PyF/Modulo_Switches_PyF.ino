@@ -4,7 +4,7 @@
 //Declaracion Variables Switches
 #define numSwitches  5
 #define switchesLEDPin  32 //Pin donde se conecta la tira de LEDs
-const int switchesPin[numSwitches] = {34,35,25,33,32}; //Pines a los que se conectan los switches
+const int switchesPin[numSwitches] = {34,35,25,26,27}; //Pines a los que se conectan los switches
 bool previousSwitchStates[numSwitches] = {0,0,0,0,0}; //Estados anteriores de los switch
 const int switchesAnswer[numSwitches] = {1,0,0,1,0}; //Respuesta vista desde los LEDs
 int LEDStates[numSwitches] = {};
@@ -23,7 +23,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2); //I2C address and screen size
 
 const byte KPROWS = 4; //four rows
 const byte KPCOLS = 4; //four columns
-char keys[KPROWS][KPCOLS] = {
+char keys[KPROWS][KPCOLS] = {     
   {'1','2','3','A'},
   {'4','5','6','B'},
   {'7','8','9','C'},
@@ -33,8 +33,9 @@ char keys[KPROWS][KPCOLS] = {
 // Conexion de los pines derecha a izquierda pin 2,3,4,5,6,7,8,9
 //byte rowPins[KPROWS] = {6,7,8,9}; //connect to the row pinouts of the keypad
 //byte colPins[KPCOLS] = {2,3,4,5}; //connect to the column pinouts of the keypad
-byte rowPins[KPROWS] = {2,0,4,16}; //connect to the row pinouts of the keypad
-byte colPins[KPCOLS] = {17,5,18,19}; //connect to the column pinouts of the keypad
+byte rowPins[KPROWS] = {16, 4, 0, 2}; // Pines conectados a las filas del teclado
+byte colPins[KPCOLS] = {19, 18, 5, 17}; // Pines conectados a las columnas del teclado
+
 Keypad teclado = Keypad( makeKeymap(keys), rowPins, colPins, KPROWS, KPCOLS );
 
 int cursorCol=2; //0 a 15
@@ -423,4 +424,10 @@ void updateBlinkingPattern(){
     }
     switchesLED.show();  
   }
+}
+bool debounceSwitch(int switchPin) {
+  bool currentState = digitalRead(switchPin);
+  delay(50);  // Espera para evitar el rebote
+  bool stableState = digitalRead(switchPin);
+  return (currentState == stableState);  // Devuelve true si el estado es estable
 }
