@@ -3,9 +3,9 @@
 const int cablePins[numCables] = {2, 3, 4, 5, 6, 7, 8};
 const int solenoidPin = 13;
 bool disconnectedCables[numCables] = {false}; //Variable para almacenar los cables que ya fueron desconectados para no volver a penalizar
-#define gameSolved 9
-#define badAnswerPin 10
-#define cerebroApproval 11
+#define gameSolved 10
+#define badAnswerPin 11
+#define cerebroApproval 9
 #define roadStart 12
 
 const int correctCable = 3; //Pin al que se conecta el cable correcto que se debe cortar
